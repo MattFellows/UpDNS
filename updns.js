@@ -11,10 +11,19 @@ server.on('query', function(query) {
   console.log(query);
   var domain = query.name();
   console.log('DNS Query: %s', domain)
-  var target = new named.SOARecord(domain, {serial: 12345});
+  
+  target = getRecord(query);
+
   query.addAnswer(domain, target, ttl);
   server.send(query);
 });
+
+function getRecord(query) {
+  var domain = query.name();
+  var type = query.type();
+
+  console.log("Finding: " + type + " records for domain: " + domain);
+}
 
 records.push('example.com', named.ARecord('192.168.0.1'));
 records.push('example.com', named.ARecord('192.168.0.2'));
