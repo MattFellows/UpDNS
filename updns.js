@@ -3,7 +3,7 @@ var server = named.createServer();
 var ttl = 300;
 var records = [];
 
-server.listen(5300, '0.0.0.0', function() {
+server.listen(5300, '::ffff:0.0.0.0', function() {
   console.log('DNS server started on port 5300');
 });
 
