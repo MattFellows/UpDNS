@@ -1,8 +1,11 @@
-var Checker = require('checker.js');
 var ping = require ("net-ping");
-var address, session, result;
 
-function Ping(address) {
+function Ping(addr) {
+    var self = this;
+    self.address = addr;
+    self.result = false;
+    self.session = null;
+
     var options = {
         networkProtocol: ping.NetworkProtocol.IPv4,
         packetSize: 16,
@@ -12,14 +15,17 @@ function Ping(address) {
         ttl: 128
     };
     session = ping.createSession (options);
-    
-    session.pingHost(address, function(error, target, sent, rcvd) {
-        result = !!error
+    session.pingHost(self.address, function(error, target, sent, rcvd) {
+        self.result = !error
+        console.log("Just checked: " + self.address + " recieved: " + self.result);
     });
 }
 
 function check() {
-    return result;
+    console.log("Checked: " + this.address + " recieved: " + this.result);
+    return this.result;
 }
 
-Ping.mixin(Checker);
+Ping.prototype.check = check;
+
+module.exports = Ping;

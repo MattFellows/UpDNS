@@ -1,33 +1,36 @@
 
-var checker, record, load;
 
 function CheckedRecord(rec, chec) {
-    record = rec;
-    checker = chec;
-    load = 0;
+    this.record = rec;
+    this.checker = chec;
+    this.load = 0;
 }
 
 function checkRecord() {
-    return checker.check() ? record : null;
+    return this.checker.check();
 }
 
 function incrementLoad() {
-    load++;
+    this.load++;
 }
 
 function resetLoad() {
-    load = 0;
+    this.load = 0;
 }
 
 function decrementLoad() {
-    load--;
-    if (load < 0) {
-        load = 0;
+    this.load--;
+    if (this.load < 0) {
+        this.load = 0;
     }
 }
 
 function getLoad() {
-    return load;
+    return this.load;
+}
+
+function getRecord() {
+    return this.record;
 }
 
 CheckedRecord.prototype.checkRecord = checkRecord;
@@ -39,5 +42,7 @@ CheckedRecord.prototype.resetLoad = resetLoad;
 CheckedRecord.prototype.decrementLoad = decrementLoad;
 
 CheckedRecord.prototype.getLoad = getLoad;
+
+CheckedRecord.prototype.getRecord = getRecord;
 
 module.exports = CheckedRecord;
