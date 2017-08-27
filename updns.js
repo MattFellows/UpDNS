@@ -53,4 +53,4 @@ if (!records['example.com']) {
 }
 records['example.com'].push(new CheckedRecord(new named.SOARecord('example.com', {serial:12345}), new Ping('192.168.0.1')));
 records['example.com'].push(new CheckedRecord(new named.SOARecord('example.com', {serial:12345}), new Ping('192.168.0.2')));
-records['example.com'].push(new CheckedRecord(new named.SOARecord('example.com', {serial:12345}), new Ping('192.168.0.3')));
+records['example.com'].push(new CheckedRecord(new named.SOARecord('example.com', {serial:12345}), new Ping('192.168.0.233')));
