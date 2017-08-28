@@ -15,26 +15,26 @@ function Ping(addr) {
         timeout: 500,
         ttl: 128
     };
-    self.session = ping.createSession (options);
+    self.session = ping.createSession(options);
+    self.interval = setInterval(function() { asyncCheck(self); }, 30000);
+    asyncCheck(self)
+}
+
+function asyncCheck(self) {
     self.session.pingHost(self.address, function(error, target, sent, rcvd) {
         self.result = !error
-        console.log("Just checked: " + self.address + " recieved: " + self.result);
+        //console.log("Just checked: " + self.address + " recieved: " + self.result);
     });
 }
 
 function check() {
-    console.log("Checked: " + this.address + " recieved: " + this.result);
+    //console.log("Checked: " + this.address + " recieved: " + this.result);
+    if (!this.interval) {
+        this.interval = setInterval(asyncCheck, 30000);
+    }
     return this.result;
 }
 
 Ping.prototype.check = check;
 
 module.exports = Ping;
-
-var works = new Ping('192.168.0.1');
-var fails = new Ping('192.168.37.71');
-setTimeout(function() {
-    var fails2 = new Ping('192.168.37.71');
-}, 3000);
-
-//works.setup();

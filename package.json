@@ -9,6 +9,7 @@
     }],
   "dependencies": {
     "node-named": "*",
-    "net-ping": "*"
+    "net-ping": "*",
+    "dnsd": "*"
   }
 }

@@ -1,27 +1,35 @@
+var dnsd = require('dnsd');
 var named = require('node-named');
+var server = dnsd.createServer(requestHandler);
+server.listen(5300, '127.0.0.1');
+console.log('Server running at 127.0.0.1:5300')
+
 var CheckedRecord = require('./recordchecker.js');
 var Ping = require('./checkers/ping.js')
-var server = named.createServer();
-var ttl = 300;
 var records = [];
 
-server.listen(5300, '::ffff:0.0.0.0', function() {
-  console.log('DNS server started on port 5300');
-});
+function requestHandler(req, res) {
+  var question = res.question[0]
+    , hostname = question.name
+    , length = hostname.length
+    , ttl = Math.floor(Math.random() * 3600);
 
-server.on('query', function(query) {
-  var domain = query.name();
-  console.log('DNS Query: %s', domain)
+  console.log('DNS Query: %s', req)
   
-  var target = getRecord(query);
+  var target = getRecord(req);
 
-  query.addAnswer(domain, target, ttl);
-  server.send(query);
-});
+  try {
+    //server.send(query);
+    console.log("Responding with: " + target.target);
+    res.end(target.target);
+  } catch (ex) {
+    console.log(ex);
+  }
+}
 
 function getRecord(query) {
-  var domain = query.name();
-  var type = query.type();
+  var domain = query.question[0].name;
+  var type = query.question[0].type;
 
   console.log("Finding: " + type + " records for domain: " + domain);
   var allRecordsForDomain = records[domain];
@@ -42,7 +50,6 @@ function getRecord(query) {
     var target = sortedCheckedRecordsForDomain[0];
     target.incrementLoad();
     var record = target.getRecord();
-    console.log("Found: " + record);
     return record;
   }
   return null;
@@ -51,6 +58,6 @@ function getRecord(query) {
 if (!records['example.com']) {
   records['example.com'] = [];
 }
-records['example.com'].push(new CheckedRecord(new named.SOARecord('example.com', {serial:12345}), new Ping('192.168.0.1')));
-records['example.com'].push(new CheckedRecord(new named.SOARecord('example.com', {serial:12345}), new Ping('192.168.0.2')));
-records['example.com'].push(new CheckedRecord(new named.SOARecord('example.com', {serial:12345}), new Ping('192.168.0.233')));
+records['example.com'].push(new CheckedRecord(new named.ARecord('192.168.0.1'), new Ping('192.168.0.1')));
+records['example.com'].push(new CheckedRecord(new named.ARecord('192.168.0.2'), new Ping('192.168.0.2')));
+records['example.com'].push(new CheckedRecord(new named.ARecord('192.168.0.197'), new Ping('192.168.0.197')));
