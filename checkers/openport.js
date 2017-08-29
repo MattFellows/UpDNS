@@ -1,10 +1,10 @@
 var net = require('net');
 
-function OpenPort(options) {
+function OpenPort(host, options) {
     var self = this;
     self.options = options;
     self.portList = self.options.portList;
-    self.host = self.options.host;
+    self.host = host;
     self.result = false;
     self.portsIndex = 0;
     self.interval = setInterval(function() { asyncCheck(self); }, self.options.interval || 30000);
@@ -25,8 +25,12 @@ function checkPort(port, self) {
     console.log("Checking: " + self.host + " port: " + port);
     var s = new net.Socket();
     s.setTimeout(self.options.timeout, function() { s.destroy(); });
+    s.on('error', function(err){
+        console.log("Error: "+err.message);
+        self.result = false;
+    })
     s.connect(port, self.host, function() {
-        console.log('OPEN: ' + port);
+        console.log('OPEN: ' + self.host + " " + port);
         self.tempResult = self.tempResult && true;
         self.portsIndex++;
         if (self.portsIndex < self.portList.length) {

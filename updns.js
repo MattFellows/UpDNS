@@ -7,6 +7,7 @@ console.log('Server running at 127.0.0.1:5300');
 var CheckedRecord = require('./recordchecker.js');
 var Ping = require('./checkers/ping.js');
 var OpenPort = require('./checkers/openport.js');
+var URLRequest = require('./checkers/urlrequest.js');
 var records = require('./records.json');
 
 function requestHandler(req, res) {
@@ -32,23 +33,27 @@ function setupRecordCheckers() {
   for (var domainName in records.domains) {
     var domain = records.domains[domainName];
     for (var recordTypeName in domain.records) {
-      var recordType = domain.records[recordTypeName];
-      var checkerType = recordType.checker.type;
-      var checkerFrequency = recordType.checker.frequency;
-      recordType.checkedRecords = [];
-      for (var recordIndex in recordType.values) {
-        var record = recordType.values[recordIndex];
-          switch (checkerType) {
-          case 'ping': 
-            var DNSrecord = getRecordType(recordTypeName, record);
-            var checkedRecord = new CheckedRecord(DNSrecord, new Ping(record, recordType.checker));
-            recordType.checkedRecords.push(checkedRecord);
-            break;
-          case 'openport': 
-            var DNSrecord = getRecordType(recordTypeName, record);
-            var checkedRecord = new CheckedRecord(DNSrecord, new OpenPort(recordType.checker));
-            recordType.checkedRecords.push(checkedRecord);
-            break;
+      if (recordTypeName == "A") {
+        var recordType = domain.records[recordTypeName];
+        var checkerType = recordType.checker.type;
+        var checkerFrequency = recordType.checker.frequency;
+        recordType.checkedRecords = [];
+        for (var recordIndex in recordType.values) {
+          var record = recordType.values[recordIndex];
+            switch (checkerType) {
+            case 'ping': 
+              var checkedRecord = new CheckedRecord(getRecordType(recordTypeName, record), new Ping(record, recordType.checker));
+              recordType.checkedRecords.push(checkedRecord);
+              break;
+            case 'openport': 
+              var checkedRecord = new CheckedRecord(getRecordType(recordTypeName, record), new OpenPort(record, recordType.checker));
+              recordType.checkedRecords.push(checkedRecord);
+              break;
+            case 'urlrequest': 
+              var checkedRecord = new CheckedRecord(getRecordType(recordTypeName, record), new URLRequest(record, recordType.checker));
+              recordType.checkedRecords.push(checkedRecord);
+              break;
+          }
         }
       }
     }

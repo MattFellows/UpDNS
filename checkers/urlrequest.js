@@ -3,18 +3,14 @@ var request = require ("request");
 function URLRequest(url, options) {
     var self = this;
     self.url = url;
-    self.localOptions = {
-        checkType: "status", //"status","content"
-        check: [200]
-    }
-    self.options = extend({}, localOptions);
-    self.options = extend(self.options, options);
+    self.options = options;
     self.result = false;
     self.interval = setInterval(function() { asyncCheck(self); }, self.options.interval || 30000);
     asyncCheck(self)
 }
 
 function asyncCheck(self) {
+    console.log("Checking: " + self.url);
     request(self.url, function (error, response, body) {
         console.log('error:', error); // Print the error if one occurred
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -40,6 +36,6 @@ function check() {
     return this.result;
 }
 
-OpenPort.prototype.check = check;
+URLRequest.prototype.check = check;
 
-module.exports = OpenPort;
+module.exports = URLRequest;

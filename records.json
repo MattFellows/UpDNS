@@ -2,13 +2,28 @@
     "domains": {
         "example.com": {
             "records": {
-                "A": {
+                "An Example": {
                     "values":["192.168.0.1", "192.168.0.2", "192.168.0.197"],
                     "checker": {
+                        "type": "ping",
+                        "interval": 10000
+                    }
+                },
+                "Another Example": {
+                    "values":["127.0.0.1", "192.168.0.2", "192.168.0.197"],
+                    "checker": {
                         "type": "openport",
-                        "host": "localhost",
-                        "portList": [5300, 5301],
+                        "portList": [5300],
                         "timeout":2000,
+                        "interval": 10000
+                    }
+                },
+                "A": {
+                    "values":["http://127.0.0.1:5300", "http://192.168.0.2", "http://192.168.0.197"],
+                    "checker": {
+                        "type": "urlrequest",
+                        "checkType": "status", 
+                        "check": [200, 201, 203], 
                         "interval": 10000
                     }
                 }
