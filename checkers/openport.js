@@ -1,28 +1,44 @@
-var op = require ("openport");
+var net = require('net');
 
-function OpenPort(portList, options) {
+function OpenPort(options) {
     var self = this;
-    self.portList = portList;
     self.options = options;
+    self.portList = self.options.portList;
+    self.host = self.options.host;
     self.result = false;
+    self.portsIndex = 0;
     self.interval = setInterval(function() { asyncCheck(self); }, self.options.interval || 30000);
     asyncCheck(self)
 }
 
 function asyncCheck(self) {
-    op.find(
-        {
-            ports: self.portList,
-            count: self.portList.length
-        },
-        function(err, ports) {
-            if (err) {
-                self.result = false;
-            } else {
-                self.result = true;
-            } 
+    if (self.portsIndex == 0) {
+        self.tempResult = true;
+        var port = self.portList[self.portsIndex];
+        if (port) {
+            checkPort(port, self);
         }
-    )
+    }
+}
+
+function checkPort(port, self) {
+    console.log("Checking: " + self.host + " port: " + port);
+    var s = new net.Socket();
+    s.setTimeout(self.options.timeout, function() { s.destroy(); });
+    s.connect(port, self.host, function() {
+        console.log('OPEN: ' + port);
+        self.tempResult = self.tempResult && true;
+        self.portsIndex++;
+        if (self.portsIndex < self.portList.length) {
+            port = self.portList[self.portsIndex];
+            if (port) {
+                checkPort(port, self);
+            }
+        } else {
+            self.result = self.tempResult;
+            self.portsIndex = 0;
+        }
+    });
 }
 
 function check() {

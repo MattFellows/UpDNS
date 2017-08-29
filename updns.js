@@ -6,6 +6,7 @@ console.log('Server running at 127.0.0.1:5300');
 
 var CheckedRecord = require('./recordchecker.js');
 var Ping = require('./checkers/ping.js');
+var OpenPort = require('./checkers/openport.js');
 var records = require('./records.json');
 
 function requestHandler(req, res) {
@@ -42,6 +43,12 @@ function setupRecordCheckers() {
             var DNSrecord = getRecordType(recordTypeName, record);
             var checkedRecord = new CheckedRecord(DNSrecord, new Ping(record, recordType.checker));
             recordType.checkedRecords.push(checkedRecord);
+            break;
+          case 'openport': 
+            var DNSrecord = getRecordType(recordTypeName, record);
+            var checkedRecord = new CheckedRecord(DNSrecord, new OpenPort(recordType.checker));
+            recordType.checkedRecords.push(checkedRecord);
+            break;
         }
       }
     }

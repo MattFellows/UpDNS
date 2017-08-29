@@ -13,7 +13,7 @@
     "node-named": "*",
     "net-ping": "*",
     "dnsd": "*",
-    "openport": "*",
-    "request": "*"
+    "request": "*",
+    "net": "*"
   }
 }
