@@ -1,0 +1,15 @@
+{
+    "domains": {
+        "example.com": {
+            "records": {
+                "A": {
+                    "values":["192.168.0.1", "192.168.0.2", "192.168.0.197"],
+                    "checker": {
+                        "type": "ping",
+                        "interval": 10000
+                    }
+                }
+            }
+        }
+    }
+}
