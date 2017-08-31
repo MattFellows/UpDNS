@@ -1,8 +1,10 @@
 {
+    "listenPort": 5300,
+    "listenAddress": "0.0.0.0",
     "domains": {
         "example.com": {
             "records": {
-                "An Example": {
+                "A": {
                     "values":["192.168.0.1", "192.168.0.2", "192.168.0.197"],
                     "checker": {
                         "type": "ping",
@@ -18,7 +20,7 @@
                         "interval": 10000
                     }
                 },
-                "A": {
+                "An Example": {
                     "values":["http://127.0.0.1:5300", "http://192.168.0.2", "http://192.168.0.197"],
                     "checker": {
                         "type": "urlrequest",

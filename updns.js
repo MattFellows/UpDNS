@@ -1,14 +1,16 @@
 var dnsd = require('dnsd');
 var named = require('node-named');
 var server = dnsd.createServer(requestHandler);
-server.listen(5300, '127.0.0.1');
-console.log('Server running at 127.0.0.1:5300');
+
+var records = require('./records.json');
+
+server.listen(records.listenPort, records.listenAddress);
+console.log('Server running at '+records.listenAddress+':'+records.listenPort);
 
 var CheckedRecord = require('./recordchecker.js');
 var Ping = require('./checkers/ping.js');
 var OpenPort = require('./checkers/openport.js');
 var URLRequest = require('./checkers/urlrequest.js');
-var records = require('./records.json');
 
 function requestHandler(req, res) {
   var question = res.question[0]
