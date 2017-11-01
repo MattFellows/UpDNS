@@ -1,7 +1,7 @@
 # UpDNS
 A load balanced DNS server with rule based checks for determining the status of potential server addresses
 
-Configure the server by editing `records.js`
+Configure the server by editing `records.json`
 
 # Installation
 Run `npm install`
