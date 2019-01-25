@@ -10,10 +10,11 @@
     }
   ],
   "dependencies": {
+    "dnsd": "*",
     "node-named": "*",
     "net-ping": "*",
-    "dnsd": "*",
-    "request": "*",
-    "net": "*"
-  }
+    "net": "*",
+    "request": "*"
+  },
+  "nondependencies": {}
 }
